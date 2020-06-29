@@ -1,0 +1,122 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/bootstrap.min.css">
+	<title>KnowFood</title>
+	<style type="text/css">
+		.navbar-brand {
+			font-size: 35px;
+			font-weight:bolder;
+			font-family:cursive;
+		}
+		.card {
+			opacity:0;
+			animation:appear 2s both;
+		}
+		@keyframes appear {
+			form {
+				opacity:0;
+			}
+			to {
+				opacity:1;
+			}
+		}
+	</style>
+</head>
+<body>
+
+<nav class="fixed-top navbar navbar-expand-md navbar-dark bg-dark"> 
+<div class="container">
+	<a class="navbar-brand" href="#">
+		KnowFood
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+	 <span class="navbar-toggler-icon"></span> 
+ 	</button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+   <div class="navbar-nav"> 
+<a class="nav-item nav-link active" href="#">All Menu</a>
+<a class="nav-item nav-link" href="#">Pizza</a>
+<a class="nav-item nav-link" href="#">Pasta</a>
+<a class="nav-item nav-link" href="#">Nasi</a>
+<a class="nav-item nav-link" href="#">Minuman</a>
+</div> 
+	</div> 
+</div>
+</nav>
+
+<div class="container">
+	<div class="row mt-5">
+		<div class="col mt-5">
+		<h1>All Menu</h1>
+		</div>
+	</div>
+	
+	<div class="row" id="menu"></div>
+	
+</div>
+
+<footer class="bg-dark py-4 mt-2 text-center text-white" >
+      <span>Copyright &copy; <a href="https://github.com/ricky03knowhere" >ricky03knowhere</a> 2019</span>
+</footer>
+
+
+<script src="assets/jquery-3.3.1.js"></script>
+<script src="assets/bootstrap.min.js"></script>
+<script>
+
+
+function showAllMenu(){
+$.getJSON('data/pizza.json',function(data){
+		let menu =data.menu;
+		
+		$.each(menu,function(i,data){
+			$('#menu').append(
+				`<div class="col-md-4">
+				<div class="card mb-3">
+				<img class="card-img-top" src="data/img/`+data.gambar+`">
+				<div class="card-body">
+				<h5 class="card-title">`+data.nama+`</h5>
+				<p class="card-text">`+data.deskripsi+`</p>
+				<h5 class="card-title">Rp.`+data.harga+`</h5>
+				<a href="#" class="btn btn-primary">Order Now</a>
+				</div>
+				</div>
+				</div>`);
+		})
+		
+	});
+}
+
+showAllMenu();
+	
+$('.nav-link').on('click',function(){
+
+		$('#menu').html('');
+		$('.nav-link').removeClass('active');
+		$(this).addClass('active');
+		
+		let ctg =$(this).html();
+		$('h1').html(ctg);
+		
+		if( ctg == 'All Menu' ){
+			showAllMenu();
+			return;
+		}
+		
+
+		$.getJSON('data/pizza.json',function(data){
+			let menu =data.menu;
+			let cont ='';
+			$.each(menu,function(i,data){
+				if( data.kategori == ctg.toLowerCase() ){
+					cont += '<div class="col-md-4"><div class="card mb-3"><img class="card-img-top" src="data/img/'+data.gambar+'"><div class="card-body"><h5 class="card-title">'+data.nama+'</h5><p class="card-text">'+data.deskripsi+'</p><h5 class="card-title">Rp.'+data.harga+'</h5><a href="#" class="btn btn-primary">Order Now</a></div></div></div>';
+				}
+			});
+			
+			$('#menu').html(cont);
+		});
+});
+</script>
+</body>
+</html>
